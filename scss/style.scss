@@ -1,0 +1,47 @@
+@import "_reset.scss";
+@import "variables.scss";
+
+/* Main */
+body {
+    font-family: $fontPrimary;
+    font-size: 16px;
+}
+.align {
+    &-center {
+        text-align: center;
+    }
+}
+
+/* Header */
+header {
+    background: $primaryColor;
+    color: $white;
+}
+
+/* Headings */
+h1, h2, h3 {
+    text-transform: uppercase;
+    font-family: $fontSecondary;
+}
+
+
+/* Menu */
+.menu {
+    &-item {
+        display: inline-block;
+        a {
+            display: inline-block;
+            color: $white;
+            text-transform: uppercase;
+            padding: 0 $gutter;
+        }
+    }
+}
+
+/* Widget Polylang */
+.widget_polylang {
+    ul, li {
+        list-style-type: none;
+        display: inline-block;
+    }
+}
