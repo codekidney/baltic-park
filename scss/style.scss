@@ -1,10 +1,29 @@
 @import "_reset.scss";
+@import "media-queries.scss";
+@import "mixins.scss";
 @import "variables.scss";
+@import "_plugin-polylang.scss";
+
 
 /* Main */
+html, body {
+}
 body {
+    min-height: 100%;
     font-family: $fontPrimary;
-    font-size: 16px;
+    font-size: $basicFontSize;
+    line-height: 150%;
+    border: $gutter/3 solid $orange;
+    border-top-width: 0;
+
+}
+.site-main {
+    width: 100%;
+    padding: 4*$gutter $gutter;
+}
+em {
+    color: $primaryColor;
+    font-style: italic;
 }
 .align {
     &-center {
@@ -12,16 +31,223 @@ body {
     }
 }
 
+.visible {
+    &-sm {
+        display: none;
+        @include mobile-landscape-and-below {
+            display: inline-block;
+        }
+    }
+}
+
+/* Slogan */
+.slogan {
+    font-family: $fontSecondary;
+    color: $white;
+    line-height: 85%;
+    font-size: 20px;
+    i,em {
+        color: $white;
+        font-style: italic;
+    }
+}
+
+/* Logo */
+.custom-logo-link {
+    img {
+        max-width: 125px;
+        height: auto;
+        display: block;
+    }
+}
+
 /* Header */
 header {
     background: $primaryColor;
     color: $white;
+    display: flex;  
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: center;
+    padding: 2*$gutter 0;
+    @include tablet-landscape-and-below {
+        .custom-logo-link {
+            order: 1;
+        }
+        .slogan {
+            order: 2;
+            br {
+                display: none;
+            }
+        }
+        .widget_polylang {
+            order: 3;
+        }
+        .menu__container {
+            order: 4;
+            flex-flow: wrap;
+            margin-top: 2*$gutter;
+        }
+    }
+    @include tablet-portrait-and-below {
+        .custom-logo-link {
+            order: 1;
+        }
+        .slogan {
+            order: 3;
+            flex-flow: wrap;
+        }
+        .widget_polylang {
+            order: 2;
+        }
+        .menu__container {
+            order: 4;
+            flex-flow: wrap;
+            margin-top: $gutter;
+        }
+        .show-mobile-nav {
+            order: 3;
+        }
+    }
+    @include mobile-landscape-and-below {
+        .menu__container {
+            margin-top: 0;
+        }
+        #menu-main-menu {
+            display: none;
+        }
+        flex-direction: column;
+        > div, > a {
+            margin-bottom: $gutter;
+        }
+    }
+}
+
+/* Button to show mobile navigation menu */
+.show-mobile-nav {
+    border: 1px solid $white;
+    padding: $gutter/3 $gutter;
+    margin-top: $gutter;
+    cursor: pointer;
+    @include transition();
+    &:hover, &:focus {
+        background-color: $textColor;
+    }
 }
 
 /* Headings */
-h1, h2, h3 {
+.btn {
+    &-next-section {
+        text-transform: uppercase;
+        letter-spacing: $letterSpacing;
+        font-size: -4px+$basicFontSize;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        padding: $gutter;
+        &:hover, &:focus {
+            
+        }
+        
+        &:after, &:before {
+            display: block;
+            content: '\A';
+        }
+        &:after {
+            width: 1px;
+            height: 45px;
+            background-color: $orange;
+            margin-top: $gutter;
+        }
+        &:before {
+            order: 2;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 7px 4px 0 4px;
+            border-color: $orange transparent transparent transparent;
+        }
+    }
+}
+
+/* Headings */
+h1 {
     text-transform: uppercase;
     font-family: $fontSecondary;
+}
+h2 {
+    font-family: $fontSecondary;
+    font-size: 44px;
+    line-height: 180%;
+    margin-bottom: 2*$gutter;    
+}
+h3 {
+    font-family: $fontSecondary;
+    letter-spacing: $letterSpacing;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+h4 {
+    text-transform: uppercase;
+    font-family: $fontSecondary;
+}
+h5 {
+    font-size: 13px;
+    line-height: 180%;
+    letter-spacing: $letterSpacing;
+    text-transform: uppercase;
+    margin-bottom: $gutter; 
+}
+
+/* Menu */
+.copyright {
+    text-transform: uppercase;
+    letter-spacing: $letterSpacing;
+    font-size: -5px+$basicFontSize;
+}
+
+/* Contact links */
+.contact-links {
+    li {
+        display: block;
+        text-align: center;
+    }
+    a {
+        color: $textColor;
+        text-transform: uppercase;
+        letter-spacing: $letterSpacing;
+        font-size: -3px+$basicFontSize;
+        white-space: nowrap;
+        line-height: 120%;
+        @include transition();
+        &:hover, &:focus {
+            color: $primaryColor;
+            text-decoration: none;
+        }
+    }
+}
+
+
+/* Social Icons */
+.social {
+    ul, li {
+        display: inline-block;
+    }
+    ul {
+        li {
+            padding: 0 $gutter/3;
+            a {
+                display: inline-block;
+                padding: $gutter/3;
+                color: $textColor;
+                font-size: 2px + $basicFontSize;
+                @include transition;
+                &:hover, &:focus {
+                    color: $primaryColor;
+                }
+            }
+        }
+    }
 }
 
 
@@ -29,19 +255,124 @@ h1, h2, h3 {
 .menu {
     &-item {
         display: inline-block;
+        &:before {
+            content: '\2022';
+            display: inline-block;
+            padding: 0 $gutter;
+        }
+        &:first-child:before {
+            display: none;
+        }
         a {
             display: inline-block;
             color: $white;
             text-transform: uppercase;
-            padding: 0 $gutter;
+            font-size: -3px+$basicFontSize;
+            letter-spacing: $letterSpacing;
+            position: relative;
+            @include transition();
+            &:before {
+                content: "\A";
+                position: absolute;
+                width: 2*$gutter;
+                height: 1px;
+                bottom: -1*$gutter/3;
+                left: 50%;
+                margin-left: -1*$gutter;
+                background-color: $white;
+                visibility: hidden;
+                @include scaleX(0);
+                @include transition(all 0.3s ease-in-out 0s);
+            }
+        }
+        &.current-menu-item a, & a:hover, & a:focus {
+            text-decoration: none;
+            &:before {
+                visibility: visible;
+                @include scaleX(1);
+            }
+        }
+        @include mobile-landscape-and-below {
+            display: block;
+            margin-bottom: $gutter/3;
+            a {
+                &:before {
+                    left: 0;
+                    margin: 0;
+                    width: 100%;
+                    bottom: 0;
+                }
+            }
+            &:first-child:before {
+                display: inline-block;
+            }
         }
     }
 }
 
-/* Widget Polylang */
-.widget_polylang {
-    ul, li {
-        list-style-type: none;
-        display: inline-block;
+.content-area {
+    display: flex;
+    .sidebar {
+        width: 115px;
+        flex-grow: 0;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &-right {
+            order: 3;
+            .social {
+                li {
+                    display: block;
+                    text-align: center;
+                }
+            }
+        }
+        &-left {
+            order: 0;
+            .contact-links {
+                @include rotate90anticlock();
+            }
+        }
+    }
+    @include tablet-landscape-and-below {
+        flex-direction: column;
+        .sidebar {
+            display: none;
+        }
+    }
+}
+
+
+.footer {
+    background: transparent url('../images/footer-pattern.png') repeat-x center left;
+    padding-top: 3*$gutter;
+    padding-bottom: 2*$gutter;
+    > div {
+        padding-bottom: $gutter;
+    }
+    .menu {
+        padding-bottom: $gutter;
+        &-item {
+            &:before {
+                font-weight: bold;
+                font-size: 25px;
+                vertical-align: bottom;
+                line-height: 25px;
+            }
+            a {
+                color: $textColor;
+                text-transform: none;
+                letter-spacing: initial;
+                font-size: 1px+$basicFontSize;
+                font-weight: bold;  
+                &:before {
+                    display: none;
+                }
+            }
+            &.current-menu-item a, a:focus, a:hover {
+                color: $primaryColor;
+            }
+        }
     }
 }

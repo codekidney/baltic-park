@@ -12,38 +12,41 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <?php wp_head(); ?> 
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,500i,700,700i&display=swap&subset=latin-ext" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700,700i,900,900i&display=swap&subset=latin-ext" rel="stylesheet">
 
 </head>
 <body <?php body_class(); ?>>
 
     <header>
-       <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-12 col-md-2">
-                    <?php
-                    $custom_logo_id = get_theme_mod( 'custom_logo' );
-                    $logo = wp_get_attachment_image_src( $custom_logo_id , 'full' );
-                    if ( has_custom_logo() ) {
-                        the_custom_logo();
-                    } else {
-                        echo '<strong>'. get_bloginfo( 'name' ) .'</strong>';
-                    }
-                    ?>
-                </div>
-                <div class="col-sm-12 col-md-2">
-                    <?php echo '<div class="slogan">'.get_theme_mod('theme_slogan_setting').'</div>'; ?>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <?php wp_nav_menu( array( 'theme_location' => 'Main menu', 'container_class' => 'menu__container' ) ); ?>
-                </div>
-                <div class="col-sm-12 col-md-2">
-                    <?php if ( is_active_sidebar( 'top-sidebar' ) ) : ?>
-                        <?php dynamic_sidebar( 'top-sidebar' ); ?>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-
+        <?php
+        /* LOGO */
+        $custom_logo_id = get_theme_mod( 'custom_logo' );
+        $logo = wp_get_attachment_image_src( $custom_logo_id , 'full' );
+        if ( has_custom_logo() ) {
+            the_custom_logo();
+        } else {
+            echo '<strong>'. get_bloginfo( 'name' ) .'</strong>';
+        }
         
+        /* SLOGAN */
+        echo get_theme_slogan();
+        
+        /* NAVIGATION */
+        wp_nav_menu( array( 'theme_location' => 'Main menu', 'container_class' => 'menu__container' ) ); 
+        
+        echo '<a id="show-mobile-nav " class="show-mobile-nav visible-sm"><i class="fa fa-bars" aria-hidden="true"></i></a>';
+        
+        /* Top SIDEBAR */
+        if ( is_active_sidebar( 'top-sidebar' ) ) : ?>
+            <?php dynamic_sidebar( 'top-sidebar' ); ?>
+        <?php endif; ?>
     </header>
+    <section id="primary" class="content-area">
+        <div class="sidebar sidebar-left">
+            <?php echo get_contact_links(); ?>
+        </div>
+        <div class="sidebar sidebar-right">
+            <?php echo get_theme_social_links(); ?>
+        </div>
+        <main id="main" class="site-main align-center">

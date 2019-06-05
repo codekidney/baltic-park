@@ -1,5 +1,17 @@
 <?php
 
+// Theme JS
+function theme_scripts() {
+    wp_enqueue_script('theme_js', get_template_directory_uri() . '/js/theme.js', array(), '1.0', true);
+}
+add_action('wp_enqueue_scripts', 'theme_scripts');
+
+// FontAwesome
+function fontawesome_style() {
+    wp_enqueue_style( 'fontawesome_style', get_template_directory_uri() . '/fontawesome-4.7/css/font-awesome.min.css', array(), '1.0', 'all');
+}
+add_action( 'wp_enqueue_scripts', 'fontawesome_style' );
+
 // Bootstrap
 function bootstrapstarter_enqueue_styles() {
     wp_register_style('bootstrap', get_template_directory_uri() . '/bootstrap-4.3.1-dist/css/bootstrap.min.css');
@@ -16,10 +28,14 @@ add_action('wp_enqueue_scripts', 'bootstrapstarter_enqueue_scripts');
 // Register Sidebars
 function theme_sidebars() {
     $args = array(
-        'id' => 'top-sidebar',
+        'id'    => 'top-sidebar',
         'class' => 'top-sidebar',
-        'name' => __('Top Sidebar', 'baltic-park'),
-        'description' => __('Sidebar at the top of page after main menu.', 'baltic-park'),
+        'name'  => __('Top Sidebar', 'baltic-park'),
+        'description'   => __('Sidebar at the top of page after main menu.', 'baltic-park'),
+        'before_widget' => '<div id="%1$s" class="widget %2$s">',
+        'after_widget'  => "</div>\n",
+        'before_title'  => '',
+        'after_title'   => '',
     );
     register_sidebar($args);
 }
@@ -28,10 +44,10 @@ add_action('widgets_init', 'theme_sidebars');
 // Add Logo
 function theme_custom_logo_setup() {
     $defaults = array(
-        'width' => 251,
+        'width'  => 251,
         'height' => 77,
         'flex-height' => true,
-        'flex-width' => true,
+        'flex-width'  => true,
         'header-text' => array('site-title', 'site-description'),
     );
     add_theme_support('custom-logo', $defaults);
@@ -145,6 +161,48 @@ function theme_customize_register($wp_customize) {
 }
 
 add_action('customize_register', 'theme_customize_register');
+
+function get_theme_social_links() {
+    $icons = array();
+    if(!empty(get_theme_mod('theme_social_facebook_setting'))) {
+        $icons[] = array( 'icon_class' => 'fa fa-facebook', 'label'=>'Facebook', 'link' => get_theme_mod('theme_social_facebook_setting') );
+    }
+    if(!empty(get_theme_mod('theme_social_twitter_setting'))) {
+        $icons[] = array( 'icon_class' => 'fa fa-twitter', 'label'=>'Twitter', 'link' => get_theme_mod('theme_social_twitter_setting') );
+    }
+    if(!empty(get_theme_mod('theme_social_instagram_setting'))) {
+        $icons[] = array( 'icon_class' => 'fa fa-instagram', 'label'=>'Instagram', 'link' => get_theme_mod('theme_social_instagram_setting') );
+    }
+    $output  = '<div class="social"><ul>';
+    foreach($icons as $icon){
+        $output .= '<li><a href="'.$icon[''].'" title="'.$icon['label'].'"><i class="'.$icon['icon_class'].'" aria-hidden="true"></i></a></li>';
+    }
+    $output .= '</ul></div>';
+    return $output;
+}
+
+function get_contact_links(){
+    $output = '<div class="contact-links"><ul>';
+    if(!empty(get_theme_mod('theme_email_setting'))) {
+        $output .= '<li class="contact-links__email"><a href="mailto:'.get_theme_mod('theme_email_setting').'">'.get_theme_mod('theme_email_setting').'</a></li>';
+    }
+    if(!empty(get_theme_mod('theme_phone_setting'))) {
+        $output .= '<li class="contact-links__phone"><a href="tel:'.preg_replace('/[^0-9\+]/', '', get_theme_mod('theme_phone_setting')).'">T. '.get_theme_mod('theme_phone_setting').'</a></li>';
+    }
+    $output .= '</ul></div>';
+    return $output;
+}
+
+function get_theme_slogan(){
+    $output = '<div class="slogan">'.get_theme_mod('theme_slogan_setting').'</div>';
+    return $output;
+}
+
+function get_theme_copyright(){
+    $output = '<div class="copyright">'.get_theme_mod('theme_copyright_setting').'</div>';
+    return $output;
+}
+//add_action( 'init', 'theme_copyright' );
 
 // Add Shortcode
 function btn_next_section_shortcode($atts) {
