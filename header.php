@@ -49,4 +49,4 @@
         <div class="sidebar sidebar-right">
             <?php echo get_theme_social_links(); ?>
         </div>
-        <main id="main" class="site-main align-center">
+        <main id="main" class="site-main">

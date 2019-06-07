@@ -1,0 +1,28 @@
+/* Fonts */
+/* Colors */
+/* Other */
+.contact-form__row {
+  margin-bottom: 3px; }
+.contact-form label {
+  line-height: 30px;
+  min-width: 120px;
+  vertical-align: top; }
+.contact-form input[type=text], .contact-form input[type=email], .contact-form textarea {
+  line-height: 30px;
+  border: 1px solid #DCDEDD;
+  padding: 0 5px;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -ms-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out; }
+  .contact-form input[type=text]:focus, .contact-form input[type=email]:focus, .contact-form textarea:focus {
+    border-color: #F4793A; }
+  .contact-form input[type=text].error, .contact-form input[type=email].error, .contact-form textarea.error {
+    outline: 1px solid red; }
+.contact-form textarea {
+  line-height: 150%;
+  padding: 5px;
+  min-height: 90px; }
+
+/*# sourceMappingURL=contact-form.css.map */

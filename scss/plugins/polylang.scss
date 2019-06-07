@@ -1,0 +1,33 @@
+@import "../variables.scss";
+
+/* Widget Polylang */
+.widget_polylang {
+    ul, li {
+        list-style-type: none;
+        display: inline-block;
+    }
+    ul {
+        li {
+            &:first-child:before {
+                display: none;
+            }
+            &:before {
+                content: '-';
+                display: inline-block;
+                margin-right: 3px;
+            }
+            a {
+                color: $white;
+                font-size: -3px+$basicFontSize;
+                display: inline-block;
+                padding: $gutter/3 0;
+                border-bottom: 1px solid transparent;
+            }
+            a:focus, a:hover,
+            &.current-lang a {
+                border-color: $white;
+                text-decoration: none;
+            }
+        }
+    }
+}

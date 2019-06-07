@@ -1,0 +1,24 @@
+/* Fonts */
+/* Colors */
+/* Other */
+/* Widget Polylang */
+.widget_polylang ul, .widget_polylang li {
+  list-style-type: none;
+  display: inline-block; }
+.widget_polylang ul li:first-child:before {
+  display: none; }
+.widget_polylang ul li:before {
+  content: '-';
+  display: inline-block;
+  margin-right: 3px; }
+.widget_polylang ul li a {
+  color: #fff;
+  font-size: 11px;
+  display: inline-block;
+  padding: 5px 0;
+  border-bottom: 1px solid transparent; }
+.widget_polylang ul li a:focus, .widget_polylang ul li a:hover, .widget_polylang ul li.current-lang a {
+  border-color: #fff;
+  text-decoration: none; }
+
+/*# sourceMappingURL=polylang.css.map */

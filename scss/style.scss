@@ -1,8 +1,9 @@
-@import "_reset.scss";
+@import "reset.scss";
 @import "media-queries.scss";
 @import "mixins.scss";
 @import "variables.scss";
-@import "_plugin-polylang.scss";
+@import "plugins/polylang.scss";
+@import "shortcodes/contact-form.scss";
 
 
 /* Main */
@@ -16,6 +17,16 @@ body {
     border: $gutter/3 solid $orange;
     border-top-width: 0;
 
+}
+table {
+    td {
+        padding: $gutter/3 $gutter;
+        border-bottom: 1px solid $lightGrey;
+    }
+}
+img {
+    max-width: 100%;
+    height: auto;
 }
 .site-main {
     width: 100%;
@@ -119,6 +130,23 @@ header {
         flex-direction: column;
         > div, > a {
             margin-bottom: $gutter;
+        }
+    }
+}
+
+.btn {
+    &-primary {
+        color: $textColor;
+        background-color: transparent;
+        border-color: $textColor;
+        @include border-radius(0);
+        &:hover {
+            color: $white;
+            background-color: $primaryColor;
+            border-color: $primaryColor;
+        }
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba($primaryColor,0.5);
         }
     }
 }
@@ -348,6 +376,7 @@ h5 {
     background: transparent url('../images/footer-pattern.png') repeat-x center left;
     padding-top: 3*$gutter;
     padding-bottom: 2*$gutter;
+    margin-top: 4*$gutter;
     > div {
         padding-bottom: $gutter;
     }
@@ -374,5 +403,19 @@ h5 {
                 color: $primaryColor;
             }
         }
+    }
+}
+
+/* Appartments */
+.archive-appartment-item {
+    a:not(.btn) {
+        color: $textColor;
+        &:hover {
+            color: $primaryColor;
+            text-decoration: none;
+        }
+    }
+    h2,h3,h4,.btn {
+        margin: $gutter 0;
     }
 }

@@ -1,0 +1,29 @@
+@import "../variables.scss";
+@import "../mixins.scss";
+.contact-form {
+    &__row {
+        margin-bottom: $gutter/5;
+    }
+    label {
+        line-height: 2*$gutter;
+        min-width: 120px;
+        vertical-align: top;
+    }
+    input[type=text], input[type=email], textarea {
+        line-height: 2*$gutter;
+        border: 1px solid $lightGrey;
+        padding: 0 $gutter/3;
+        @include transition();
+        &:focus {
+            border-color: $primaryColor;
+        }
+        &.error {
+            outline: 1px solid red;
+        }
+    }
+    textarea {
+        line-height: 150%;
+        padding: $gutter/3;
+        min-height: 90px;
+    }
+}

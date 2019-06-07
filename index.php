@@ -1,3 +1,4 @@
+INDEX
 <?php
 get_header();
 

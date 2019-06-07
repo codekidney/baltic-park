@@ -202,9 +202,12 @@ function get_theme_copyright(){
     $output = '<div class="copyright">'.get_theme_mod('theme_copyright_setting').'</div>';
     return $output;
 }
-//add_action( 'init', 'theme_copyright' );
 
-// Add Shortcode
+/* 
+ * Shortcodes
+ */
+
+// Button for next section shortcode
 function btn_next_section_shortcode($atts) {
 
     // Attributes
@@ -220,8 +223,88 @@ function btn_next_section_shortcode($atts) {
         return '';
     }
 }
-
 add_shortcode('btn_next_section', 'btn_next_section_shortcode');
+
+add_action( 'wp_ajax_nopriv_contact_form_send', 'contact_form_send' );
+add_action( 'wp_ajax_contact_form_send', 'contact_form_send' );
+function contact_form_send() {
+    $params = array();
+    foreach ($_POST as $key => $param) {
+        $params[trim(esc_sql($key))] = (!empty($_POST[$key]) ? trim(esc_sql($_POST[$key])) : $null_return );
+    }
+    
+    $recipient   = $params['recipient'];
+    $email       = $params['email'];
+    $subject     = $params['subject'];
+    $first_name  = $params['fname'];
+    $second_name = $params['sname'];
+    $message     = $params['message'];
+    
+    if(!empty($recipient) &&!empty($email) && !empty($message)){
+        
+        $to = $recipient;
+        $body  = __('First name','baltic-park').' : '.$first_name."\n";
+        $body .= __('Second name','baltic-park').' : '.$second_name."\n";
+        $body .= __('E-mail','baltic-park').' : '.$email."\n";
+        $body .= __('Message','baltic-park').' : '.$message."\n";
+        $headers = array('Content-Type: text/plain; charset=UTF-8');
+        wp_mail( $to, $subject, $body, $headers );  
+        echo json_encode(array('success' => true, 'message' => __('Mail send','baltic-park') ));
+    } else {
+        echo json_encode(array('success' => false, 'message' => __('Error sending mail','baltic-park') ));
+    }
+    die();
+}
+
+// Contact form shortcode
+function contact_form_shortcode( $atts ) {
+    static $id = 1;
+    
+    if ( isset($_SERVER['HTTPS']) )  {
+        $protocol = 'https://';  
+    } else {
+       $protocol = 'http://';  
+    }
+   $admin_ajax_url = admin_url( 'admin-ajax.php?action=contact_form_send', $protocol ); 
+   $recipient = sanitize_email($atts['recipient']);
+   if(empty($recipient)){
+       $recipient = get_option('admin_email');
+   }
+   $subject   = sanitize_text_field( $atts['subject'] );
+   if(empty($subject)){
+       $subject = __('Contact form message', 'baltic-park');
+   }
+  
+    $output  = '<div class="contact-form contact-form-'.$id.'">';
+    $output .= '<form action="'.$admin_ajax_url.'" method="POST">';
+    $output .= '<input type="hidden" name="recipient" value="'.$recipient.'"/>';
+    $output .= '<input type="hidden" name="subject" value="'.$subject.'"/>';
+    $output .= '<div class="contact-form__row"><label for="fname_'.$id.'">'.__('First name','baltic-park').'</label><input type="text" id="fname_'.$id.'" name="fname" /></div>';
+    $output .= '<div class="contact-form__row"><label for="sname_'.$id.'">'.__('Second name','baltic-park').'</label><input type="text" id="sname_'.$id.'" name="sname" /></div>';
+    $output .= '<div class="contact-form__row"><label for="email_'.$id.'">'.__('E-mail','baltic-park').' <stong>*</strong></label><input required type="email" id="email_'.$id.'" name="email" /></div>';
+    $output .= '<div class="contact-form__row"><label for="message_'.$id.'">'.__('Message','baltic-park').' <stong>*</strong></label><textarea required name="message" id="message_'.$id.'"></textarea></div>';
+    $output .= '<div class="contact-form__row"><input type="submit" class="btn btn-primary" value="'.__('Send','baltic-park').'" /></div>';
+    $output .= '</form>';
+    $output .= '</div>';
+    $output .= '<script>;(function($){'
+            . '$(function(){'
+            . 'let contact_form_'.$id.' = $(".contact-form-'.$id.' form");'
+            . 'contact_form_'.$id.'.submit(function(e){'
+            . 'e.preventDefault();'
+            . '$.ajax({ type: contact_form_'.$id.'.attr(\'method\'), url: contact_form_'.$id.'.attr(\'action\'), data: contact_form_'.$id.'.serialize(),
+            success: function (data) {
+                const result = JSON.parse(data);
+                contact_form_'.$id.'.find("input[type=text], input[type=email], textarea").val("");
+                const messageElem = (result[\'success\']) ? \'<div class="alert alert-success" role="alert">\'+result[\'message\']+\'</div>\' : \'<div class="alert alert-danger" role="alert">\'+result[\'message\']+\'</div>\';
+                contact_form_'.$id.'.prepend(messageElem);
+            } }); }); }); })(jQuery)</script>';
+    
+            
+    $id++;
+    return $output;
+}
+add_shortcode( 'contact_form', 'contact_form_shortcode' );
+
 
 // Register Navigation Menus
 function navigation_menus() {
@@ -234,3 +317,63 @@ function navigation_menus() {
 }
 
 add_action('init', 'navigation_menus');
+
+// Add lang support
+function baltic_park_localize_theme() {
+    load_theme_textdomain('baltic-park', get_template_directory() . '/languages');
+}
+add_action('after_setup_theme', 'baltic_park_localize_theme');
+
+/*  Appartment post type */
+add_theme_support( 'post-thumbnails' ); 
+add_action('init', 'appartment_post_type_register');
+function appartment_post_type_register() {
+
+    $labels = array(
+        'name' => _x('Appartments', 'post type general name', 'baltic-park'),
+        'singular_name' => _x('Appartment', 'post type singular name', 'baltic-park'),
+        'add_new' => _x('Add New', 'appartment', 'baltic-park'),
+        'add_new_item' => __('Add New Appartment', 'baltic-park'),
+        'edit_item' => __('Edit Appartment', 'baltic-park'),
+        'new_item' => __('New Appartment', 'baltic-park'),
+        'view_item' => __('View Appartment', 'baltic-park'),
+        'search_items' => __('Search Appartments', 'baltic-park'),
+        'not_found' =>  __('Nothing found', 'baltic-park'),
+        'not_found_in_trash' => __('Nothing found in Trash', 'baltic-park'),
+        'parent_item_colon' => ''
+    );
+
+    $args = array(
+//    'public' => true,
+//    'label' => _('Blog Post'),
+//    'description' => _('Site\'s blog posts'),
+//    'show_ui' => true,
+//    'show_in_nav_menus' => true,
+//    'taxonomies' => array('blog_posts'),
+//    'supports' => array('title', 'editor', 'comments', 'trackbacks', 'thumbnail'),
+//    'capability_type' => 'post',
+//    'rewrite' => array('slug' => 'blog', 'has_archive' => 'blog_posts', 'with_front' => false)
+        
+        'public' => true,
+        'labels' => $labels,
+        'description' => 'Appartments',
+        'show_ui' => true,
+        'show_in_nav_menus' => true,
+        'taxonomies' => array('appartments'),
+        'supports' => array('title','thumbnail','editor'),
+        'capability_type' => 'post',
+        'has_archive' => true,
+        'rewrite' => array('slug' => 'appartment', 'has_archive' => 'appartments', 'with_front' => false)
+        
+//        'publicly_queryable' => true,
+//        'show_in_menu' => true,
+//        'exclude_from_search' => false,
+//        'query_var' => true,
+//        'can_export' => true,
+//        'rewrite' => true,
+//        'hierarchical' => false,
+//        'menu_position' => null,
+      ); 
+
+    register_post_type( 'appartment' , $args );
+}
